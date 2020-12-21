@@ -33,6 +33,15 @@ BeanSurvey<-mutate(BeanSurvey,GENDERHH=ifelse(is.na(GENDERHH),"male",as.characte
 
 
 ```
+### Overview of ggplot2
+
+`ggplot2` is also not the only additional plotting library that exists within R. There are many different ways of making plots using R, although these days `ggplot2` is the most commonly used. Particularly if you are looking at older resources online you may see plots being produced using the base R plotting libray, or sometimes in a different library called `lattice`. However, `ggplot2` is an obvious choice for new users of R to start with - since the code is designed to be consistent to make, theoretically, any sort of plot you could imagine, the default style is visually appealing but plots are also easily able to be customised in lots of ways. There is a trade off for this, since ggplot2 uses a lot of slightly strange terminology which may take a while to learn and get used to. 
+
+'gg' stands for 'grammar of graphics', a term coined by the 1999 book by Leland Wilkinson. This is a system for defining graphs encouraging you to think about each of different components making up the graph, and providing specifications for those components. In this course we will focus on six of these components 'aesthetics','geometries','themes', 'facets', 'scales' and 'labels'. This specification makes you think clearly about exactly what you want to display, allows an extremely high degree of customisation both in 'graphical content' and in style, and makes it easy to provide visual consistency over lots of different graphs.
+
+There are other components you can explore beyond this, but with these six components you will be able to make thousands of possible plots from your data. Both the ggplot2 syntax and the terminology can look confusing at first, but through practice once you understand the basic building blocks, you will be able to produce complex graphs very quickly and easily. 
+
+As a reminder, in this workbook there are a mixture of code chunks that you can run without needing to modify any code, and code chunks which are prefaced with a **QUESTION**, where you will need to make changes to the code in the chunk. Solutions to these questions are embedded within the chunk.
 
 
 
@@ -88,7 +97,7 @@ So the first thing that we need to specify in the function is what data frame we
 
 And we could just finish our code at this point and run this chunk of code, it is a valid and complete piece of code.
 
-```{r data1,exercise=TRUE}
+```{r dataplot1,exercise=TRUE}
 ggplot(data = BeanSurvey)
 ```
 
@@ -138,3 +147,175 @@ ggplot(data = BeanSurvey,  aes(x = VILLAGE)) +
 ggplot(data = BeanSurvey,  aes(x = AGEHH)) + 
   geom_bar()
 ```
+
+## Plots with one continuous variable  
+
+`Age`, unlike `Village`, is a continuous variable in our dataset. So a bar chart is probably not the best choice of plot when exploring our data. With this sort of data we might instead consider histograms, density plots or boxplots. These can be created easily by changing the geom from geom_bar to `geom_histogram` or `geom_density` or `geom_boxplot`, without really needing to modify our code in any other way.
+
+```{r Agehist,exercise=TRUE}
+ggplot(data = BeanSurvey,  aes(x = AGEHH)) + 
+  geom_histogram()
+```
+
+It might be worth recapping the difference between bar charts and histograms if you are unsure of how these two types of plot vary, <a href="https://stattrek.com/statistics/charts/histogram.aspx" target="_blank">here</a>
+
+In this case R provides us with a message "`stat_bin()` using `bins = 30`. Pick better value with `binwidth`". When making a histogram, the numeric data is grouped together into "bins" of similar values. The default is to create 30 such groups, but R has identified that 30 may not be a sensible choice here for our data so the message is providing us with a helpful suggestion! We might consider setting the `binwidth` argument with `geom_histogram` as the message suggests, to provide age groups spanning 5 years. 
+
+```{r binwidth,exercise=TRUE}
+ggplot(data = BeanSurvey,  aes(x = AGEHH)) + 
+  geom_histogram(binwidth=5)
+```
+
+
+`geom_density` also works in a similar way.
+```{r Agedens,exercise=TRUE}
+ggplot(data = BeanSurvey,  aes(x = AGEHH)) + 
+  geom_density()
+```
+The density plot is a lot like a histogram, except it applies a smoother function so that you can try to understand the underlying distribution of the variable you are examining.
+
+So let's try the same again with the boxplot:
+
+```{r Agebox,exercise=TRUE,error=TRUE}
+ggplot(data = BeanSurvey,  aes(x = AGEHH)) + 
+  geom_boxplot()
+```
+
+It may be worth recapping the information presented within a boxplot, if it is not something you immediately remember,
+<a href="https://stattrek.com/statistics/charts/boxplot.aspx" target="_blank">here</a>
+
+It shows us:
+* The median value, the black line through the middle. This is the point where half the values are lower, and half are higher.
+* The minimum and maximum values, the extremes of the line
+* The interquartile range, the edges of the box. These show us the points where 25% of the values are lower, and 75% higher at the bottom; and then the points where 75% of values are lower and 25% of values are higher at the top.
+
+With all of the plots we have made so far we have a choice - if we want the histogram, density plot or boxplot to be plotted horizontally we would specify just an x aesthetic. But with all of these geometries we could also have the same plot produced vertically by just using a y aesthetic.
+
+```{r Agebox2,exercise=TRUE}
+ggplot(data = BeanSurvey,  aes(y = AGEHH)) + 
+  geom_boxplot()
+```
+
+In most cases it is personal preference as to whether you prefer to see the plots horizontally or vertically, and different people may have different preferences.
+
+
+Statisticians love boxplots. Although a single boxplot by itself is kind of boring - lots of boxplots side by side can be quite interesting and allow for comparisons. I wonder whether there is any relationship between gender of the household head and their age?
+
+## Plots with more than variable
+
+Using the same code we just used, we can add in a mapping of a categorical variable to our, to produce multiple boxplots side by side. With `geom_boxplot` if we are specifiying a y and an x variable then one of these must be a continuous numeric variable (like age or bean yield) and the other variable must be a categorical (ordinal or nominal) variable (like village or gender)
+
+```{r Agebox3,exercise=TRUE}
+ggplot(data = BeanSurvey,  aes(y = AGEHH,x=GENDERHH)) + 
+  geom_boxplot()
+```
+
+*QUESTION: Try to interpret the results of this boxplot. Do we see differences in the distribution of ages between male and female household heads. If so, what?*
+
+Trying to include another numeric variable, like `CHILDREN`, instead of `GENDERHH`, will not give an error, but the plot will just ignore that x variable and make a single box and a warning message will appear.
+
+```{r Agebox4,exercise=TRUE}
+ggplot(data = BeanSurvey,  aes(y = AGEHH,x=CHILDREN)) + 
+  geom_boxplot()
+```
+Not every mistake you make in R will result in an error! In this case we have produced a plot which is almost certainly not what we wanted. Although again, R has given us a message to try to help us here: `Continuous x aesthetic -- did you forget aes(group=...)?`.
+
+So to fix this problem, within the `aes()` we should include `group=CHILDREN` as well as `x=CHILDREN`. 
+
+```{r Agebox5,exercise=TRUE}
+ggplot(data = BeanSurvey,  aes(y = AGEHH,x=CHILDREN,group=CHILDREN)) + 
+  geom_boxplot()
+```
+This plot is quite interesting. Households with no children living within the household tend to be much older on average. This makes a lot of sense, since many of these would be farmers who do have children, but that are no longer aged under 18 or no longer living in the household. Then we can see an increasing trend in the average age as the number of children living in the household increases. You can also see that the 'box' for 6 children is actually a line! This will happen if there is only one single observation within a group, or if all the observations within the group are the same.
+
+Note that, if we had only included the `group=CHILDREN` without the `x=CHILDREN` we still would have had an issue. This time the seperate plots would have been created, but the axis would not have been labelled correctly.
+
+```{r Agebox6,exercise=TRUE}
+ggplot(data = BeanSurvey,  aes(y = AGEHH,group=CHILDREN)) + 
+  geom_boxplot()
+```
+
+
+
+**Question: Now modify the code below to produce some boxplots to investigate if there is a relationship between `LANDAREA` and `VILLAGE`. Make sure you assign the variables to the appropriate aesthetics**
+```{r IncPol,exercise=TRUE}
+ggplot(data = BeanSurvey,  aes(y = AGEHH,x=GENDERHH)) + 
+  geom_boxplot()
+```
+
+```{r IncPol-solution}
+ggplot(data = BeanSurvey,  aes(y = LANDAREA,x=VILLAGE)) + 
+  geom_boxplot()
+```
+
+### geom_point
+
+We can now try and create a scatter plot, using geom_point(). However if we take the code from the first example and modify `geom_bar` to `geom_point` we find an error.
+
+```{r Agescat6,exercise=TRUE,error=TRUE}
+ggplot(data = BeanSurvey,  aes(x = AGEHH)) + 
+  geom_point()
+```
+
+This error is telling us that with have a "missing aesthetic: y". This is because we need to have both an x and a y variable to produce a scatter plot. Ideally for a scatter plot we need two numeric variables; so let's take a look at age on the x axis and land area on the y axis.
+
+```{r Agescat7,exercise=TRUE}
+ggplot(data = BeanSurvey,  aes(x = AGEHH,y=LANDAREA)) + 
+  geom_point()
+```
+
+Nothing immediately obvious is jumping out as a relationship between these variables!
+
+As we have seen with `geom_point()` and `geom_boxplot()`, different geometries will have different requirements for which 'aesthetics' it needs as a minimum requirement, and whether these variables should be numeric or categorical or something else. <a href="https://github.com/rstudio/cheatsheets/raw/master/data-visualization-2.1.pdf" target="_blank">The ggplot2 cheat sheet</a> is a great resource to help work through this as is <a href="https://r-graphics.org/" target="_blank">the R graphics cookbook</a> 
+
+Our plots are all a little basic so we should learn some more R so we can start to make them a bit more customised and impressive. In part two we will start to learn more about applying colours and scales to our plots. But first, let's practice with some examples of using just the data, aesthetics and geometry components to see how we can explore the data more and produce lots of different plots!
+
+## Exercises
+
+Remember when completing these exercises, that nobody can remember every single piece of R code from the top of their heads! If you are getting stuck, look back over the notes to try to find similar examples and see if you can then work out how to copy and then modify this code to meet the exercise objectives. 
+
+
+**Exercise 1. Replace each of the instances of "ZZZ" from the code below to produce a bar chart showing the frequencies of the household head gender variable**
+
+```{r ex2,exercise=TRUE,error=TRUE}
+
+#ggplot(data=ZZZ, aes(x=ZZZ)) + 
+#  geom_ZZZ()
+
+```
+
+
+**Exercise 2. Identify and fix the error(s) in this code to produce a boxplot of age of household head by village**
+
+```{r ex1,exercise=TRUE,error=TRUE}
+#ggplot2(data = BEANSURVEY,  aes(x = AgeHH, y = Village) 
+ # geom_box()
+```
+
+
+**Exercise 3. Produce a histogram of land area. Set the bins so that each bin covers a range of 1 acre**
+
+```{r ex4,exercise=TRUE}
+
+```
+
+**Exercise 4. Make a scatter plot showing the number of adults on the x axis against the number of children on the y axis. Can you see any limitations to this plot?**
+
+```{r ex3,exercise=TRUE}
+
+```
+
+
+## Appendix: Useful reference links  
+
+R Graphics Cookbook: <a href="http://www.cookbook-r.com/Graphs/" target="_blank">http://www.cookbook-r.com/Graphs/</a> 
+
+ggplot2 CheatSheet:<a href="https://rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf" target="_blank">https://rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf   </a>  
+
+R Color Chart: <a href="http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf" target="_blank">http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf     </a>   
+
+ggplot2 manuals (warning - technical and slightly pretentious. First line "ggplot2... embodies a deep philosophy of visualisation"): <a href="https://ggplot2.tidyverse.org/" target="_blank">https://ggplot2.tidyverse.org/     </a>     
+
+Plotting with ggplot - Roger Peng videos:
+<a href="https://www.youtube.com/watch?v=HeqHMM4ziXA" target="_blank">Part 1    </a>  
+<a href="https://www.youtube.com/watch?v=n8kYa9vu1l8" target="_blank">Part 2 </a>  
