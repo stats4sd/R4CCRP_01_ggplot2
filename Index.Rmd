@@ -67,3 +67,74 @@ DT::datatable(BeanSurvey)
 
 (You can use the arrow keys on your keyboard to scroll right in case the data table does not fit entirely on your screen)
 
+## First Plot
+
+To start off we are going to look at producing some plots with just one variable at a time. Let's start with a simple bar chart showing the frequency of different villages within the dataset. The code has been written for you in the chunk below. Press "Run Code" in the chunk below to see the resulting plot.
+
+```{r two_one,exercise=TRUE}
+ggplot(data = BeanSurvey,  aes(x = VILLAGE)) + 
+  geom_bar()
+```
+
+Easy! Well, maybe not at first, since some of the commands we're using in that chunk look a bit strange. Let's start taking a look at each of the components within that code to understand what they all do.
+
+## Data
+
+Let's break down each of the different parts of this command.
+
+With ggplot2, you always begin a graph with the function `ggplot()`. This function provides the information which will be passed to all subsequent functions making up the plot - about the data and the aesthetic mapping being used. 
+And to make a plot you need some data, all ggplots must be made from an object of class data frame (or tibble) - we cannot plot anything which does not live inside of one of these data objects. 
+So the first thing that we need to specify in the function is what data frame we are using. In this case the data frame we are using has been assigned the name `BeanSurvey`.
+
+And we could just finish our code at this point and run this chunk of code, it is a valid and complete piece of code.
+
+```{r data1,exercise=TRUE}
+ggplot(data = BeanSurvey)
+```
+
+But it is totally useless by itself! We have told R to make a plot from the `BeanSurvey` data, but we have not told it what variables from the data we want to plot, or how we want to plot them. So we get a completely blank canvas returned to us.
+
+This will lead us to specifying the two most important components of the ggplot - what variables we want to plot (the "aesthetic mapping") and how we want to plot them (the "geometries"). Every ggplot you will ever make will require you to specify as a minimum, the data, the aesthetics and the geometries. Everything else beyond that point is, to a certain degree, optional as there are default settings which are applied.
+
+
+## Aesthetic Mapping
+
+If we go back to the original code we saw the part of the code which said `aes(x = VILLAGE)`. 'aes' is the abbreviation for aesthetics. This is the word used to describe the different components of the plot onto which we can map different variables from our data.
+When thinking of most straightforward graphs the obvious aesthetics are the x axis and y axis. But we will also learn more about other aesthetics later, as we can also use our data to define colours, size of points, shapes, labels and so on. There are some plot types, like bar charts, we only need to specify one aesthetic as a minimum. So we can map the column `VILLAGE` on to the x aesthetic of our graph in preparation for making a single bar chart.
+
+Again, we can run just this line on its own:
+
+```{r aes1,exercise=TRUE}
+ggplot(data = BeanSurvey, aes(x = VILLAGE))
+```
+
+You will see this is also a blank canvas, as before, except this time the x axis has been labeled and plotted based on the unique values of the column `VILLAGE` from our dataset `BeanSurvey`. 
+
+This whole line has now build up the page on which we will draw a plot. But we need to tell R exactly how it should draw a plot which we do by setting a geometry. 
+
+## Geometries   
+
+All geometry types are functions `geom_xxx` where the `xxx` is replaced by the shorthand for the plot type that you want to make. The geom function we want to use now for a bar chart is `geom_bar`
+
+When we write the code for a ggplot, we think in terms of layering all of these different functions on top of each other. Each of the functions form a layer which are sequentially added to the plot.
+The canvas we have just set is one layer; the bars will be another layer. The components are separated using a `+`, and it is usually conventional to start a new line for each new layer, as this makes your code easier to read.
+
+```{r aes2,exercise=TRUE}
+ggplot(data = BeanSurvey,  aes(x = VILLAGE)) + 
+  geom_bar()
+```
+
+Note that the `+` must be placed at the end of the line, not at the beginning of the new line. If you forget to put the plus at the end of the line, R will see a complete and valid piece of code and run this, and then ignore anything which comes afterwards (usually giving a warning or error while doing so).
+
+The y axis for `geom_bar`, by default, becomes the frequency of each unique category within the variable mapped to our x aesthetic. So from the plot we can see that in our survey we interviewed farmers from two villages, Kimbugu and Lwala, and that there were slightly more farmers interviewed in Lwala compared to Kimbugu.
+
+**Question: Modify the code to make a bar chart of `AGEHH` instead of `VILLAGE`**
+```{r AgePlot,exercise=TRUE}
+ggplot(data = BeanSurvey,  aes(x = VILLAGE)) + 
+  geom_bar()
+```
+
+```{r AgePlot-solution}
+ggplot(data = BeanSurvey,  aes(x = AGEHH)) + 
+  geom_bar()
+```
