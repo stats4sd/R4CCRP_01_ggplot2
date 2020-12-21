@@ -19,3 +19,18 @@ In this session we will start looking at one of the most widely used, and almost
 ### Installing the ggplot2 package
 As mentioned in the video, this is not the default plotting library within R - but an additional package which needs to be installed separately. We will learn more about installing packages a bit later in the course, but an important thing to remember is that when you are using RStudio or R, to make sure you have downloaded the package first,using `install.packages("ggplot2")`, and that you have loaded the package for the session, using `library(ggplot2)`. The package has already been pre-loaded into this workbook.
 
+```{r setup, include=FALSE}
+library(learnr)
+library(tidyverse)
+library(knitr)
+tutorial_options(exercise.timelimit = 10)
+BeanSurvey<-read.csv("bean_survey.csv")[,-1]
+
+BeanSurvey$AGEHH<-c(32,57,20,55,78,42,28,49,41,54,65,63,32,29,43,68,53,39,25,44,23,47,32,26,25,29,44,23,58,69,26,65,75,51,38,24,35,29,37,45,50,23,60,32,70,43,51,28,65,33)
+
+
+BeanSurvey<-mutate(BeanSurvey,GENDERHH=ifelse(is.na(GENDERHH),"male",as.character(GENDERHH)))
+
+
+```
+
