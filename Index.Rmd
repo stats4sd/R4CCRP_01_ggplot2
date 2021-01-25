@@ -274,13 +274,14 @@ Our plots are all a little basic so we should learn some more R so we can start 
 
 Remember when completing these exercises, that nobody can remember every single piece of R code from the top of their heads! If you are getting stuck, look back over the notes to try to find similar examples and see if you can then work out how to copy and then modify this code to meet the exercise objectives. 
 
+All of the exercises are using the `BeanSurvey` data we have been working with so far - remember you can also go back to look at the description of the data and the variables.
 
-**Exercise 1. Replace each of the instances of "ZZZ" from the code below to produce a bar chart showing the frequencies of the household head gender variable**
+**Exercise 1. Replace each of the instances of "ZZZ" from the code below to produce a bar chart showing the frequencies of the household head gender variable `GENDERHH`**
 
 ```{r ex2,exercise=TRUE,error=TRUE}
 
-#ggplot(data=ZZZ, aes(x=ZZZ)) + 
-#  geom_ZZZ()
+ggplot(data=ZZZ, aes(x=ZZZ)) + 
+  geom_ZZZ()
 
 ```
 
@@ -288,8 +289,8 @@ Remember when completing these exercises, that nobody can remember every single 
 **Exercise 2. Identify and fix the error(s) in this code to produce a boxplot of age of household head by village**
 
 ```{r ex1,exercise=TRUE,error=TRUE}
-#ggplot2(data = BEANSURVEY,  aes(x = AgeHH, y = Village) 
- # geom_box()
+ggplot2(data = BEANSURVEY,  aes(x = AgeHH, y = Village) 
+  geom_box()
 ```
 
 
